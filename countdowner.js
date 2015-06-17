@@ -1,46 +1,56 @@
 $( document ).ready(function() {
 	
+	//Constants
+	var second = 1000;
+	var minute = second * 60;
+	var hour = minute * 60;
+	var day = hour * 24;
+	var week = day * 7;
+	
 	//Converts it from GMT to Eastern Timezone
-	var magnaballDate = new Date(2015, 7, 21, 18, 15, 0, 0)
+	var magnaballDate = new Date(2015, 7, 21, 18, 15, 0, 0);
 	var dateInEastern = magnaballDate.toLocaleString("en-US", {timeZone: "America/New_York"});
 	$( "#lblStart" ).text(dateInEastern);
 	
 	$( "#btnWeeks" ).click(function() {
-		calculateAndDisplay('weeks');
+		calculateAndDisplay('Weeks', 'weeks');
 	});
 	
 	$( "#btnDays" ).click(function() {
-		calculateAndDisplay('days');
+		calculateAndDisplay('Days', 'days');
 	});
 	
 	$( "#btnHours" ).click(function() {
-		calculateAndDisplay('hours');
+		calculateAndDisplay('Hours', 'hours');
 	});
 	
 	$( "#btnMinutes" ).click(function() {
-		calculateAndDisplay('minutes');
+		calculateAndDisplay('Minutes', 'minutes');
 	});
 	
 	$( "#btnSeconds" ).click(function() {
-		calculateAndDisplay('seconds');
+		calculateAndDisplay('Seconds', 'seconds');
 	});
 	
 	$( "#btnNYE95YEMs" ).click(function() {
-		
+		//NYE 95 YEM is 25:37 which is 1537 seconds
+		var secondsUntilMagnaball = getDateDiff(magnaballDate, 'now', 'seconds');
+		var yemsUntilMagnaball = (secondsUntilMagnaball / 1537).toFixed(3);
+		$( "#lblCountdown" ).text('NYE 95 YEMs: ' + yemsUntilMagnaball);
 	});
 	
 	// $( "#btn" ).click(function() {
 		// calculateAndDisplay('');
 	// });
 	
-	function calculateAndDisplay(interval){
+	function calculateAndDisplay(type, interval){
 		$( "#errorMessage" ).text("");
 		$( "#lblCountdown" ).text("");
 		
 		try
 		{
 			var finalText = getDateDiff(magnaballDate, 'now', interval);
-			$( "#lblCountdown" ).text(finalText);
+			$( "#lblCountdown" ).text(type + ": " + finalText);
 		}
 		catch(e){
 			$( "#errorMessage" ).text("An error occurred, please try again later.");
@@ -48,11 +58,7 @@ $( document ).ready(function() {
 	}
 	
 	function getDateDiff(date1, date2, interval) {
-		var second = 1000,
-		minute = second * 60,
-		hour = minute * 60,
-		day = hour * 24,
-		week = day * 7;
+		
 		date1 = new Date(date1).getTime();
 		date2 = (date2 == 'now') ? new Date().getTime() : new Date(date2).getTime();
 		
